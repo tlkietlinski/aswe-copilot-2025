@@ -320,7 +320,7 @@ function updatePageTitle() {
     const titleData = document.getElementById('page-title-data');
     if (titleData) {
         const listName = titleData.dataset.listName || 'My Tasks';
-        const incompleteCount = parseInt(titleData.dataset.incompleteCount || '0', 10);
+        const incompleteCount = +(titleData.dataset.incompleteCount || '0');
         
         if (incompleteCount > 0) {
             document.title = `(${incompleteCount}) ${listName} - Todo App`;

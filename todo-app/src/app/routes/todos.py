@@ -33,7 +33,7 @@ def _verify_list_access(db: Session, list_id: str, user_id: str) -> TodoList | N
 def _get_list_todo_count(db: Session, list_id: str) -> int:
     """Get the count of incomplete todos in a list."""
     return db.query(func.count(Todo.id)).filter(
-        Todo.list_id == list_id, Todo.is_completed is False
+        Todo.list_id == list_id, ~Todo.is_completed
     ).scalar()
 
 
