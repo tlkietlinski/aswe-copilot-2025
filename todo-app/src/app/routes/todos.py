@@ -33,7 +33,7 @@ def _verify_list_access(db: Session, list_id: str, user_id: str) -> TodoList | N
 def _get_list_todo_count(db: Session, list_id: str) -> int:
     """Get the count of incomplete todos in a list."""
     return db.query(func.count(Todo.id)).filter(
-        Todo.list_id == list_id, Todo.is_completed == False
+        Todo.list_id == list_id, ~Todo.is_completed
     ).scalar()
 
 
@@ -300,10 +300,18 @@ async def delete_todo(
     if not list_obj:
         return Response(status_code=403)
 
+    list_id = todo.list_id
     db.delete(todo)
     db.commit()
 
-    return Response(status_code=200)
+    # Get updated count for OOB swap
+    count = _get_list_todo_count(db, list_id)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="partials/todo_deleted_oob.html",
+        context={"list_id": list_id, "list": list_obj, "count": count},
+    )
 
 
 @router.post("/{todo_id}/reorder")
