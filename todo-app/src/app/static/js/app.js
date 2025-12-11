@@ -335,9 +335,8 @@ document.addEventListener('DOMContentLoaded', updatePageTitle);
 
 // Update title after HTMX swaps (when OOB updates occur)
 document.body.addEventListener('htmx:afterSwap', (evt) => {
-    // Check if the page-title-data element was updated
-    if (evt.detail.target.id === 'page-title-data' || 
-        document.getElementById('page-title-data')) {
+    // Check if the page-title-data element was updated via OOB swap
+    if (evt.detail.target.id === 'page-title-data') {
         updatePageTitle();
     }
 });
