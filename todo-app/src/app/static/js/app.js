@@ -315,6 +315,33 @@ document.body.addEventListener('htmx:afterSwap', (evt) => {
     }
 });
 
+// Update page title based on incomplete todo count
+function updatePageTitle() {
+    const titleData = document.getElementById('page-title-data');
+    if (titleData) {
+        const listName = titleData.dataset.listName || 'My Tasks';
+        const incompleteCount = parseInt(titleData.dataset.incompleteCount || '0', 10);
+        
+        if (incompleteCount > 0) {
+            document.title = `(${incompleteCount}) ${listName} - Todo App`;
+        } else {
+            document.title = `${listName} - Todo App`;
+        }
+    }
+}
+
+// Update title on page load
+document.addEventListener('DOMContentLoaded', updatePageTitle);
+
+// Update title after HTMX swaps (when OOB updates occur)
+document.body.addEventListener('htmx:afterSwap', (evt) => {
+    // Check if the page-title-data element was updated
+    if (evt.detail.target.id === 'page-title-data' || 
+        document.getElementById('page-title-data')) {
+        updatePageTitle();
+    }
+});
+
 // Set no-cache headers for all responses
 document.body.addEventListener('htmx:configRequest', (evt) => {
     evt.detail.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';

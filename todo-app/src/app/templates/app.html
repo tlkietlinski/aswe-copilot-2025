@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ active_list.name if active_list else 'My Tasks' }} - Todo App{% endblock %}
+{% block title %}{% if active_list %}{% if incomplete_count > 0 %}({{ incomplete_count }}) {% endif %}{{ active_list.name }}{% else %}My Tasks{% endif %} - Todo App{% endblock %}
 
 {% block body %}
 <div class="app-layout">
@@ -52,6 +52,8 @@
         <main class="main-content" id="main-content">
             {% if active_list %}
             {% include "partials/todo_list_content.html" with context %}
+            <!-- Hidden element for title updates via HTMX OOB -->
+            <div id="page-title-data" style="display:none;" data-list-name="{{ active_list.name | e }}" data-incomplete-count="{{ incomplete_count }}"></div>
             {% else %}
             <div class="empty-state">
                 <sl-icon name="card-checklist" class="empty-icon"></sl-icon>
